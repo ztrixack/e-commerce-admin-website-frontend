@@ -6,13 +6,11 @@
  */
 
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
+// import { FormattedMessage } from 'react-intl';
+// import messages from './messages';
+
+import { Redirect } from 'react-router-dom';
 
 export default function HomePage() {
-  return (
-    <h1>
-      <FormattedMessage {...messages.header} />
-    </h1>
-  );
+  return <Redirect to={{ pathname: '/login' }} />;
 }
