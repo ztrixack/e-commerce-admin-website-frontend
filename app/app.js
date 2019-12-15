@@ -16,6 +16,10 @@ import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
 
+// Import antd
+import 'antd/dist/antd.less';
+import 'antd-theme.less';
+
 // Import root app
 import App from 'containers/App';
 
