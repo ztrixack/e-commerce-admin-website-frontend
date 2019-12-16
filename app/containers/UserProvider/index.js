@@ -15,7 +15,7 @@ import Loading from 'components/Loading';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import { getUser } from './actions';
+
 import makeSelectUserProvider from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -29,7 +29,8 @@ export function UserProvider(props) {
 
   React.useEffect(() => {
     if (user.isAuthenticated) {
-      dispatch(getUser());
+      // eslint-disable-next-line no-console
+      console.log('Authenticated');
     }
   }, [dispatch, user]);
 

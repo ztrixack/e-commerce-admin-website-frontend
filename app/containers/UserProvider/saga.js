@@ -1,14 +1,16 @@
 // import { take, call, put, select } from 'redux-saga/effects';
 import { call, put, /* select, */ takeLatest } from 'redux-saga/effects';
 import { push } from 'connected-react-router/immutable';
+import { UserAPI } from 'api';
+import { ACCESS_TOKEN } from 'config/constants';
 
-import { ACCESS_TOKEN, LOGIN_REQUEST, LOGOUT } from './constants';
+import { LOGIN_REQUEST, LOGOUT } from './constants';
 import { loginSuccess, loginFailure, logoutSuccess } from './actions';
 
 function loginApi(credential) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = '{"token": "test"}';
+      const response = await UserAPI.login(credential);
       localStorage.setItem(ACCESS_TOKEN, JSON.stringify(response));
       resolve(response);
     } catch (e) {
@@ -23,14 +25,11 @@ function logoutApi() {
   });
 }
 
-function* login({ credential, setNotice }) {
+function* login({ credential }) {
   try {
-    yield call(setNotice);
-
     const result = yield call(loginApi, credential);
     yield put(loginSuccess(result));
   } catch (e) {
-    yield call(setNotice, 'username or password is invalid');
     yield put(loginFailure(e));
   }
 }

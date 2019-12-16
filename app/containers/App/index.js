@@ -17,6 +17,8 @@ import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
+import { withUser } from 'containers/UserProvider';
+
 import GlobalStyle from '../../global-styles';
 
 export function App(props) {
@@ -36,4 +38,7 @@ App.propTypes = {
   history: PropTypes.object,
 };
 
-export default compose(withRouter)(App);
+export default compose(
+  withRouter,
+  withUser,
+)(App);

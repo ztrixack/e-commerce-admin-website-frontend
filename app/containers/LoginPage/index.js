@@ -14,6 +14,8 @@ import { compose } from 'redux';
 import { Alert, Icon, Checkbox, Form } from 'antd';
 import { Redirect } from 'react-router-dom';
 
+import makeSelectUserProvider from 'containers/UserProvider/selectors';
+
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import makeSelectLoginPage from './selectors';
@@ -102,10 +104,12 @@ export function LoginPage(props) {
 LoginPage.propTypes = {
   // dispatch: PropTypes.func.isRequired,
   form: PropTypes.object.isRequired,
+  // user: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
   loginPage: makeSelectLoginPage(),
+  user: makeSelectUserProvider(),
 });
 
 function mapDispatchToProps(dispatch) {

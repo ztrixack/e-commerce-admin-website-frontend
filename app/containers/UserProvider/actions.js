@@ -19,11 +19,10 @@ export function defaultAction() {
   };
 }
 
-export function login(credential, setNotice) {
+export function login(credential) {
   return {
     type: LOGIN_REQUEST,
     credential,
-    setNotice,
   };
 }
 export function loginSuccess(result) {

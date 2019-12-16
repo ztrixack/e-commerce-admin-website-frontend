@@ -5,7 +5,6 @@
  */
 
 export const DEFAULT_ACTION = 'app/UserProvider/DEFAULT_ACTION';
-export const ACCESS_TOKEN = 'ACCESS_TOKEN';
 
 export const LOGIN_REQUEST = 'app/UserProvider/LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'app/UserProvider/LOGIN_SUCCESS';

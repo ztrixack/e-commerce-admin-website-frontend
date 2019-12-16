@@ -13,7 +13,7 @@ function useHooks({ form, user, dispatch }) {
           return;
         }
 
-        dispatch(login(values), setNotice);
+        dispatch(login(values));
       });
     },
     [dispatch, form],
@@ -21,7 +21,7 @@ function useHooks({ form, user, dispatch }) {
 
   return {
     notice,
-    isAuthenticated: user && user.isAuthenticated && user.data,
+    isAuthenticated: user && user.isAuthenticated,
     event: {
       onLogin,
     },
