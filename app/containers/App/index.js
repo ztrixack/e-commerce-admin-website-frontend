@@ -8,7 +8,9 @@
  */
 
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 
 import HomePage from 'containers/HomePage/Loadable';
@@ -17,9 +19,9 @@ import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 import GlobalStyle from '../../global-styles';
 
-export default function App() {
+export function App(props) {
   return (
-    <ConnectedRouter>
+    <ConnectedRouter history={props.history}>
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/login" component={LoginPage} />
@@ -29,3 +31,9 @@ export default function App() {
     </ConnectedRouter>
   );
 }
+
+App.propTypes = {
+  history: PropTypes.object,
+};
+
+export default compose(withRouter)(App);
