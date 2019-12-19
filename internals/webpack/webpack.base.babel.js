@@ -38,12 +38,16 @@ module.exports = options => ({
       },
       {
         test: /\.less$/,
-        use: ['style-loader', 'css-loader', {
-          loader: 'less-loader',
-          options: {
-            javascriptEnabled: true,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
           },
-        }],
+        ],
       },
       {
         test: /\.scss$/,
@@ -143,6 +147,12 @@ module.exports = options => ({
         NODE_ENV:
           JSON.stringify(dotenv.parsed.NODE_ENV) ||
           JSON.stringify(process.env.NODE_ENV),
+        PORT:
+          JSON.stringify(dotenv.parsed.PORT) ||
+          JSON.stringify(process.env.PORT),
+        BASE_URL:
+          JSON.stringify(dotenv.parsed.BASE_URL) ||
+          JSON.stringify(process.env.BASE_URL),
       },
     }),
   ]),

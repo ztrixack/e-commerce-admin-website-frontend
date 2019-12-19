@@ -9,4 +9,5 @@ stats.json
 npm-debug.log
 .idea
 .env
-node_modules
+package-lock.json
+yarn.lock
