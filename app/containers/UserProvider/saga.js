@@ -4,8 +4,15 @@ import { push } from 'connected-react-router/immutable';
 import { UserAPI } from 'api';
 import { ACCESS_TOKEN } from 'config/constants';
 
-import { LOGIN_REQUEST, LOGOUT } from './constants';
-import { loginSuccess, loginFailure, logoutSuccess } from './actions';
+import { LOGIN_REQUEST, LOGOUT, GET_USER_REQUEST } from './constants';
+import {
+  loginSuccess,
+  loginFailure,
+  logoutSuccess,
+  getUser,
+  getUserSuccess,
+  getUserFailure,
+} from './actions';
 
 function loginApi(credential) {
   return new Promise(async (resolve, reject) => {
@@ -29,6 +36,7 @@ function* login({ credential }) {
   try {
     const result = yield call(loginApi, credential);
     yield put(loginSuccess(result));
+    yield put(getUser());
   } catch (e) {
     yield put(loginFailure(e));
   }
@@ -42,8 +50,18 @@ function* logout({ options }) {
   }
 }
 
+function* getUserInfo() {
+  try {
+    const result = yield call(UserAPI.findById, { id: 'me' });
+    yield put(getUserSuccess(result));
+  } catch (e) {
+    yield put(getUserFailure(e.response));
+  }
+}
+
 export default function* userProviderSaga() {
   // See example in containers/HomePage/saga.js
   yield takeLatest(LOGIN_REQUEST, login);
   yield takeLatest(LOGOUT, logout);
+  yield takeLatest(GET_USER_REQUEST, getUserInfo);
 }

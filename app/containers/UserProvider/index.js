@@ -16,6 +16,7 @@ import Loading from 'components/Loading';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 
+import { getUser } from './actions';
 import makeSelectUserProvider from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -29,10 +30,9 @@ export function UserProvider(props) {
 
   React.useEffect(() => {
     if (user.isAuthenticated) {
-      // eslint-disable-next-line no-console
-      console.log('Authenticated');
+      dispatch(getUser());
     }
-  }, [dispatch, user]);
+  }, []);
 
   return (
     <Loading loading={props.user.loading}>

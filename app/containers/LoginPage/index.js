@@ -11,10 +11,11 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { Alert, Icon, Checkbox, Form } from 'antd';
+import { Alert, Icon, Form } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import makeSelectUserProvider from 'containers/UserProvider/selectors';
+import logoImage from 'assets/svg/logo.svg';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -26,10 +27,12 @@ import saga from './saga';
 import { useHooks } from './hooks';
 import {
   LoginWarp,
-  LoginForm,
+  LoginLogo,
+  LoginLogoImage,
+  LoginLogoSpan,
   LoginFormInput,
-  LoginFormForgot,
   LoginFormButton,
+  LoginGuest,
 } from './styles';
 
 export function LoginPage(props) {
@@ -37,35 +40,31 @@ export function LoginPage(props) {
   useInjectSaga({ key: 'loginPage', saga });
 
   const { getFieldDecorator } = props.form;
-  const { notice, isAuthenticated, event } = useHooks(props);
+  const { notice, isAuthenticated, events } = useHooks(props);
 
   if (isAuthenticated) {
-    return <Redirect to={{ pathname: '/dashboard' }} />;
+    return <Redirect to={{ pathname: '/' }} />;
   }
 
   return (
     <LoginWarp>
-      <LoginForm onSubmit={event.onLogin()}>
-        {notice && (
-          <Alert
-            style={{ marginBottom: 24 }}
-            message={notice}
-            type="error"
-            showIcon
-            closable
-          />
-        )}
+      <LoginLogo>
+        <LoginLogoImage alt="logo" src={logoImage} />
+        <LoginLogoSpan>Admin Panel</LoginLogoSpan>
+      </LoginLogo>
+      <Form onSubmit={events.onLogin()}>
         <Form.Item>
           {getFieldDecorator('username', {
             rules: [
               {
                 required: true,
-                message: 'Please input your username!',
+                message: 'username is required!',
               },
             ],
           })(
             <LoginFormInput
               prefix={<Icon type="user" />}
+              onPressEnter={events.onLogin()}
               placeholder="Username"
             />,
           )}
@@ -75,28 +74,35 @@ export function LoginPage(props) {
             rules: [
               {
                 required: true,
-                message: 'Please input your Password!',
+                message: 'password is required!',
               },
             ],
           })(
             <LoginFormInput
               prefix={<Icon type="lock" />}
+              onPressEnter={events.onLogin()}
               type="password"
               placeholder="Password"
             />,
           )}
         </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox>Remember me</Checkbox>)}
-          <LoginFormForgot>Forgot password</LoginFormForgot>
-          <LoginFormButton type="primary" htmlType="submit">
-            Log in
-          </LoginFormButton>
-        </Form.Item>
-      </LoginForm>
+        {notice && (
+          <Alert
+            style={{ marginBottom: 24 }}
+            message={notice}
+            type="error"
+            showIcon
+            closable
+          />
+        )}
+        <LoginFormButton type="primary" htmlType="submit">
+          Sign in
+        </LoginFormButton>
+        <LoginGuest>
+          <span>Username：guest</span>
+          <span>Password：guest</span>
+        </LoginGuest>
+      </Form>
     </LoginWarp>
   );
 }

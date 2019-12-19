@@ -20,7 +20,7 @@ import { Redirect } from 'react-router-dom';
 
 export function HomePage({ user }) {
   if (user && user.isAuthenticated) {
-    return <Redirect to={{ pathname: '/dashboard' }} />;
+    return <Redirect to={{ pathname: '/admin/dashboard' }} />;
   }
 
   return <Redirect to={{ pathname: '/login' }} />;

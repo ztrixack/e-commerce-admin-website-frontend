@@ -17,6 +17,10 @@ import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
+import PrivateRoute from 'containers/PrivateRoute/Loadable';
+
+import AdminLayout from 'containers/AdminLayout/Loadable';
+
 import { withUser } from 'containers/UserProvider';
 
 import GlobalStyle from '../../global-styles';
@@ -27,6 +31,7 @@ export function App(props) {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/login" component={LoginPage} />
+        <PrivateRoute path="/admin" component={AdminLayout} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

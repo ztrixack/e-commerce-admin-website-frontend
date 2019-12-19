@@ -75,7 +75,7 @@ export default async (data, options, extraOptions) => {
       try {
         const token = JSON.parse(localStorage.getItem(ACCESS_TOKEN));
         // check if require refresh token
-        config.headers.Authorization = `Bearer ${token.id}`;
+        config.headers.Authorization = `Bearer ${token.accesstoken}`;
       } catch (e) {
         delete config.headers.Authorization;
       }
