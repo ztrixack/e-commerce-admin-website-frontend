@@ -1,16 +1,16 @@
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import DashboardPage from 'containers/DashboardPage/Loadable';
 
 const routes = [
   {
     path: '',
     menu: 'Dashboard',
-    component: NotFoundPage,
+    component: DashboardPage,
     hidden: true,
   },
   {
     path: 'dashboard',
     menu: 'Dashboard',
-    component: NotFoundPage,
+    component: DashboardPage,
     icon: 'dashboard',
   },
 ];

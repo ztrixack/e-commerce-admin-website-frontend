@@ -3,8 +3,6 @@ import { logout } from 'containers/UserProvider/actions';
 
 function useHooks({ user, dispatch }) {
   const userInfo = user.data;
-  console.log(user);
-
   const [collapse, setCollapse] = React.useState(false);
 
   const onCollapse = React.useCallback(
