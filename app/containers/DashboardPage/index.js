@@ -13,6 +13,7 @@ import { compose } from 'redux';
 
 import { Card, Row, Col } from 'antd';
 import SightBlock from 'components/SightBlock';
+import LargeChartBlock from 'components/LargeChartBlock';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -79,6 +80,14 @@ export function DashboardPage(props) {
         </Col>
         <Col xs={24} md={12} lg={6}>
           Top ten income
+        </Col>
+      </Row>
+      <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]}>
+        <Col>
+          <LargeChartBlock
+            datasetA={[65, 59, 80, 81, 56, 55, 40, 46, 26, 77, 54, 21]}
+            datasetB={[28, 48, 40, 19, 86, 27, 90, 45, 44, 96, 46, 72]}
+          />
         </Col>
       </Row>
     </Card>
