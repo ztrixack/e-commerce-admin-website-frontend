@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ACCESS_TOKEN } from 'config/constants';
+import { AUTHENTICATION } from 'config/constants';
 import _config from 'config';
 const baseURL = _config.apiUrl;
 
@@ -37,6 +37,24 @@ function buildURLFromTemplate(data, options) {
   };
 }
 
+export async function refreshToken(token) {
+  const options = {
+    method: 'get',
+    url: '/oauth/token',
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    localStorage.setItem(AUTHENTICATION, JSON.stringify(response.data));
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export default async (data, options, extraOptions) => {
   const config = {};
   const { data: outputData, url } = buildURLFromTemplate(data, options);
@@ -71,11 +89,17 @@ export default async (data, options, extraOptions) => {
     config.headers = {
       ...options.headers,
     };
-    if (localStorage.getItem(ACCESS_TOKEN)) {
+    if (localStorage.getItem(AUTHENTICATION)) {
       try {
-        const token = JSON.parse(localStorage.getItem(ACCESS_TOKEN));
+        let token = JSON.parse(localStorage.getItem(AUTHENTICATION));
         // check if require refresh token
-        config.headers.Authorization = `Bearer ${token.accesstoken}`;
+        if (Date.now() - token.created_at >= token.expires_in) {
+          await refreshToken(`${token.token_type} ${token.refresh_token}`);
+          token = JSON.parse(localStorage.getItem(AUTHENTICATION));
+        }
+
+        const authorization = `${token.token_type} ${token.access_token}`;
+        config.headers.Authorization = authorization;
       } catch (e) {
         delete config.headers.Authorization;
       }

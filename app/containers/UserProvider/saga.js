@@ -2,7 +2,7 @@
 import { call, put, /* select, */ takeLatest } from 'redux-saga/effects';
 import { push } from 'connected-react-router/immutable';
 import { UserAPI } from 'api';
-import { ACCESS_TOKEN } from 'config/constants';
+import { AUTHENTICATION } from 'config/constants';
 
 import { LOGIN_REQUEST, LOGOUT, GET_USER_REQUEST } from './constants';
 import {
@@ -17,8 +17,8 @@ import {
 function loginApi(credential) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await UserAPI.login(credential);
-      localStorage.setItem(ACCESS_TOKEN, JSON.stringify(response));
+      const response = await UserAPI.signin(credential);
+      localStorage.setItem(AUTHENTICATION, JSON.stringify(response));
       resolve(response);
     } catch (e) {
       reject(e.response);
@@ -27,7 +27,7 @@ function loginApi(credential) {
 }
 function logoutApi() {
   return new Promise(resolve => {
-    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(AUTHENTICATION);
     resolve({});
   });
 }
