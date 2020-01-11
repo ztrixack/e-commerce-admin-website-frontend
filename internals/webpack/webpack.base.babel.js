@@ -145,13 +145,13 @@ module.exports = options => ({
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV:
-          dotenv.parsed.NODE_ENV && JSON.stringify(dotenv.parsed.NODE_ENV) ||
+          dotenv.parsed && JSON.stringify(dotenv.parsed.NODE_ENV) ||
           JSON.stringify(process.env.NODE_ENV),
         PORT:
-          dotenv.parsed.PORT && JSON.stringify(dotenv.parsed.PORT) ||
+          dotenv.parsed && JSON.stringify(dotenv.parsed.PORT) ||
           JSON.stringify(process.env.PORT),
         BASE_URL:
-          dotenv.parsed.BASE_URL && JSON.stringify(dotenv.parsed.BASE_URL) ||
+          dotenv.parsed && JSON.stringify(dotenv.parsed.BASE_URL) ||
           JSON.stringify(process.env.BASE_URL),
       },
     }),
