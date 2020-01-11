@@ -1,8 +1,8 @@
 import Resource from 'utils/resource';
 
 export default new Resource('/users', {
-  login: {
-    url: 'login',
+  signin: {
+    url: 'signin',
     method: 'post',
   },
   signup: {

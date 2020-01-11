@@ -4,7 +4,7 @@
  *
  */
 import produce from 'immer';
-import { ACCESS_TOKEN } from 'config/constants';
+import { AUTHENTICATION } from 'config/constants';
 import {
   DEFAULT_ACTION,
   LOGIN_REQUEST,
@@ -12,10 +12,13 @@ import {
   LOGIN_FAILURE,
   LOGOUT,
   LOGOUT_SUCCESS,
+  GET_USER_REQUEST,
+  GET_USER_SUCCESS,
+  GET_USER_FAILURE,
 } from './constants';
 
 export const initialState = {
-  isAuthenticated: !!localStorage.getItem(ACCESS_TOKEN),
+  isAuthenticated: !!localStorage.getItem(AUTHENTICATION),
   data: false,
   error: false,
   loading: false,
@@ -36,7 +39,7 @@ const userProviderReducer = (state = initialState, action) =>
         break;
       case LOGIN_SUCCESS:
         draft.loading = false;
-        draft.isAuthenticated = !!localStorage.getItem(ACCESS_TOKEN);
+        draft.isAuthenticated = !!localStorage.getItem(AUTHENTICATION);
         break;
       case LOGIN_FAILURE:
         draft.loading = false;
@@ -51,6 +54,20 @@ const userProviderReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.isAuthenticated = false;
         draft.data = false;
+        break;
+
+      case GET_USER_REQUEST:
+        draft.loading = true;
+        draft.error = false;
+        draft.data = false;
+        break;
+      case GET_USER_SUCCESS:
+        draft.loading = false;
+        draft.data = action.result;
+        break;
+      case GET_USER_FAILURE:
+        draft.loading = false;
+        draft.error = action.error;
         break;
 
       default:

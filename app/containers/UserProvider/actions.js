@@ -11,6 +11,9 @@ import {
   LOGIN_FAILURE,
   LOGOUT,
   LOGOUT_SUCCESS,
+  GET_USER_REQUEST,
+  GET_USER_SUCCESS,
+  GET_USER_FAILURE,
 } from './constants';
 
 export function defaultAction() {
@@ -47,5 +50,23 @@ export function logout(options) {
 export function logoutSuccess() {
   return {
     type: LOGOUT_SUCCESS,
+  };
+}
+
+export function getUser() {
+  return {
+    type: GET_USER_REQUEST,
+  };
+}
+export function getUserSuccess(result) {
+  return {
+    type: GET_USER_SUCCESS,
+    result,
+  };
+}
+export function getUserFailure(error) {
+  return {
+    type: GET_USER_FAILURE,
+    error,
   };
 }

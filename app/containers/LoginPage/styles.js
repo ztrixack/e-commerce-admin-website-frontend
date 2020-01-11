@@ -1,37 +1,63 @@
 import styled from 'styled-components';
 
-import { Input, Button, Form } from 'antd';
+import { Input, Button } from 'antd';
 
 const LoginWarp = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  margin: -160px 0 0 -160px;
+  width: 320px;
+  height: 320px;
+  padding: 36px;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
 `;
 
-const LoginForm = styled(Form)`
-  max-width: 320px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 20px 0px;
-  padding: 32px !important;
-  border-radius: 8px;
+const LoginLogo = styled.div`
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoginLogoImage = styled.img`
+  width: 40px;
+  margin-right: 8px;
+`;
+
+const LoginLogoSpan = styled.span`
+  vertical-align: text-bottom;
+  font-size: 16px;
+  text-transform: uppercase;
+  display: inline-block;
+  font-weight: 700;
 `;
 
 const LoginFormInput = styled(Input)`
   font-size: 13sp;
 `;
 
-const LoginFormForgot = styled.a`
-  float: right;
-`;
-
 const LoginFormButton = styled(Button)`
   width: 100%;
 `;
 
+const LoginGuest = styled.p`
+  color: #cccccc;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+`;
+
 export {
   LoginWarp,
-  LoginForm,
+  LoginLogo,
+  LoginLogoImage,
+  LoginLogoSpan,
   LoginFormInput,
-  LoginFormForgot,
   LoginFormButton,
+  LoginGuest,
 };
