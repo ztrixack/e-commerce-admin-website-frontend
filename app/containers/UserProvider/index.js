@@ -32,7 +32,7 @@ export function UserProvider(props) {
     if (user.isAuthenticated) {
       dispatch(getUser());
     }
-  }, []);
+  }, [dispatch, user.isAuthenticated]);
 
   return (
     <Loading loading={props.user.loading}>
