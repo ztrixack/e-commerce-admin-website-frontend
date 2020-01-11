@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
-import { Form, Input, InputNumber } from 'antd';
+import { Form, Input, InputNumber, Select } from 'antd';
 import EditableContext from 'components/EditableContext';
 
 // import { FormattedMessage } from 'react-intl';
@@ -19,6 +19,14 @@ function EditableCell(props) {
   const getInput = () => {
     if (props.inputType === 'number') {
       return <InputNumber />;
+    }
+    if (props.inputType === 'boolean') {
+      return (
+        <Select style={{ width: 100 }}>
+          <Select.Option value="false">false</Select.Option>
+          <Select.Option value="true">true</Select.Option>
+        </Select>
+      );
     }
     return <Input />;
   };
@@ -45,10 +53,10 @@ function EditableCell(props) {
                   rules: [
                     {
                       required: true,
-                      message: `Please Input ${title}!`,
+                      message: `Please input ${title}!`,
                     },
                   ],
-                  initialValue: record[dataIndex],
+                  initialValue: record[dataIndex].toString(),
                 })(getInput())}
               </Form.Item>
             ) : (

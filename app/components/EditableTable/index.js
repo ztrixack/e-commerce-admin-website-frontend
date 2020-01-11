@@ -123,10 +123,10 @@ class EditableTable extends React.Component {
 
   isEditing = record => record.key === this.state.editingKey;
 
+  isNewRecord = key => key === 'new';
+
   cancel = key => {
-    if (key === 'new') {
-      this.remove(key);
-    }
+    if (this.isNewRecord(key)) this.remove(key);
 
     this.setState({ editingKey: '' });
   };
@@ -136,53 +136,52 @@ class EditableTable extends React.Component {
       if (error) {
         return;
       }
+
+      let result;
       const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
+      const index = newData.findIndex(d => d.key === key);
+      const item = newData[index];
+      const newItem = Object.assign({}, item, row);
+      delete newItem.key;
+
+      if (this.isNewRecord(key)) {
+        result = await this.props.onAdd(newItem);
+      } else {
+        result = await this.props.onEdit(newItem.id, newItem);
+      }
+
+      if (result) {
+        result.key = result.id;
         newData.splice(index, 1, {
           ...item,
-          ...row,
+          ...result,
         });
-
-        if (key === 'new') {
-          const result = await this.props.onAdd(newData[index]);
-          if (result) {
-            newData.splice(index, 1, {
-              ...result,
-              key: result.id,
-            });
-            this.setState({ data: newData, editingKey: '' });
-          }
-        } else {
-          const result = await this.props.onEdit(
-            newData[index].id,
-            newData[index],
-          );
-          if (result) {
-            this.setState({ data: newData, editingKey: '' });
-          }
-        }
+        this.setState({
+          data: newData,
+          editingKey: '',
+        });
       } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: '' });
+        this.setState({
+          editingKey: '',
+        });
       }
     });
   };
 
   add = () => {
-    const { data } = this.state;
-    const newData = {
-      key: 'new',
-      name: '',
-      image: '',
-      price: 0,
-      hidden: false,
-    };
-    this.setState({
-      data: [...data, newData],
+    this.setState(state => ({
+      data: [
+        ...state.data,
+        {
+          key: 'new',
+          name: '',
+          image: '',
+          price: 0,
+          hidden: false,
+        },
+      ],
       editingKey: 'new',
-    });
+    }));
   };
 
   edit = key => {
@@ -190,21 +189,29 @@ class EditableTable extends React.Component {
   };
 
   remove = async key => {
-    if (key === 'new') {
+    let success = true;
+
+    if (!this.isNewRecord(key)) {
+      success = await this.props.onDelete(key);
+    }
+
+    if (success) {
       this.setState(state => ({
         data: state.data.filter(item => item.key !== key),
       }));
-    } else {
-      const newData = [...this.state.data];
-      const index = newData.findIndex(item => item.key === key);
-      if (index > -1) {
-        const success = await this.props.onDelete(newData[index].id);
-        if (success) {
-          this.setState(state => ({
-            data: state.data.filter(item => item.key !== key),
-          }));
-        }
-      }
+    }
+  };
+
+  getInputType = dataIndex => {
+    switch (dataIndex) {
+      case 'price':
+        return 'number';
+
+      case 'hidden':
+        return 'boolean';
+
+      default:
+        return 'text';
     }
   };
 
@@ -224,7 +231,7 @@ class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'price' ? 'number' : 'text',
+          inputType: this.getInputType(col.dataIndex),
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),

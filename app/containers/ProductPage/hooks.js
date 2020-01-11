@@ -20,10 +20,10 @@ function useHooks() {
 
       if (err) {
         setAlert(['error', 'Add product is failed']);
-      } else {
-        setAlert(['info', 'Add product is completed']);
+        return null;
       }
 
+      setAlert(['info', 'Add product is completed']);
       return result;
     },
     [call],
@@ -39,10 +39,10 @@ function useHooks() {
 
       if (err) {
         setAlert(['error', 'Edit product is failed']);
-      } else {
-        setAlert(['info', 'Edit product is completed']);
+        return null;
       }
 
+      setAlert(['info', 'Edit product is completed']);
       return result;
     },
     [call],
