@@ -132,7 +132,7 @@ class EditableTable extends React.Component {
   };
 
   save = (form, key) => {
-    form.validateFields((error, row) => {
+    form.validateFields(async (error, row) => {
       if (error) {
         return;
       }
@@ -144,7 +144,25 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         });
-        this.setState({ data: newData, editingKey: '' });
+
+        if (key === 'new') {
+          const result = await this.props.onAdd(newData[index]);
+          if (result) {
+            newData.splice(index, 1, {
+              ...result,
+              key: result.id,
+            });
+            this.setState({ data: newData, editingKey: '' });
+          }
+        } else {
+          const result = await this.props.onEdit(
+            newData[index].id,
+            newData[index],
+          );
+          if (result) {
+            this.setState({ data: newData, editingKey: '' });
+          }
+        }
       } else {
         newData.push(row);
         this.setState({ data: newData, editingKey: '' });
@@ -171,10 +189,23 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: key });
   };
 
-  remove = key => {
-    this.setState(state => ({
-      data: state.data.filter(item => item.key !== key),
-    }));
+  remove = async key => {
+    if (key === 'new') {
+      this.setState(state => ({
+        data: state.data.filter(item => item.key !== key),
+      }));
+    } else {
+      const newData = [...this.state.data];
+      const index = newData.findIndex(item => item.key === key);
+      if (index > -1) {
+        const success = await this.props.onDelete(newData[index].id);
+        if (success) {
+          this.setState(state => ({
+            data: state.data.filter(item => item.key !== key),
+          }));
+        }
+      }
+    }
   };
 
   render() {
@@ -228,6 +259,9 @@ class EditableTable extends React.Component {
 
 EditableTable.propTypes = {
   dataSource: PropTypes.array,
+  onAdd: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
   // data: PropTypes.array,
   // editingKey: PropTypes.string,
   // events: PropTypes.object,

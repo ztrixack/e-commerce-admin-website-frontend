@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { Card } from 'antd';
+import { Card, message } from 'antd';
 import EditableTable from 'components/EditableTable';
 
 import { useInjectSaga } from 'utils/injectSaga';
@@ -26,11 +26,25 @@ export function ProductPage(props) {
   useInjectReducer({ key: 'productPage', reducer });
   useInjectSaga({ key: 'productPage', saga });
 
-  const { dataSource, loading, error } = useHooks(props);
+  const { dataSource, loading, error, alert, events } = useHooks(props);
+
+  if (alert[0] !== '') {
+    if (alert[0] === 'info') {
+      message.info(alert[1]);
+    } else {
+      message.error(alert[1]);
+    }
+    events.resetAlert();
+  }
 
   return (
     <Card loading={loading} error={error}>
-      <EditableTable dataSource={dataSource} />
+      <EditableTable
+        dataSource={dataSource}
+        onAdd={events.handleAdd()}
+        onEdit={events.handleEdit()}
+        onDelete={events.handleDelete()}
+      />
     </Card>
   );
 }
