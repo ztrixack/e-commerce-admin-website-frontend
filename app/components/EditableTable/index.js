@@ -123,7 +123,11 @@ class EditableTable extends React.Component {
 
   isEditing = record => record.key === this.state.editingKey;
 
-  cancel = () => {
+  cancel = key => {
+    if (key === 'new') {
+      this.remove(key);
+    }
+
     this.setState({ editingKey: '' });
   };
 
