@@ -20,7 +20,12 @@ import { Redirect } from 'react-router-dom';
 
 export function HomePage({ user }) {
   if (user && user.isAuthenticated) {
-    return <Redirect to={{ pathname: '/admin/dashboard' }} />;
+    if (user.data.roles && user.data.roles.length > 0) {
+      const highestRole = user.data.roles[0];
+      return <Redirect to={{ pathname: `/${highestRole}/dashboard` }} />;
+    }
+
+    return <Redirect to={{ pathname: `/staff` }} />;
   }
 
   return <Redirect to={{ pathname: '/login' }} />;

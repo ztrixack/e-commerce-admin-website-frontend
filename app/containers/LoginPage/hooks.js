@@ -9,9 +9,11 @@ function useHooks({ form, user, dispatch }) {
   const onLogin = React.useCallback(
     () => e => {
       e.preventDefault();
+      setNotice(null);
 
       validateFieldsAndScroll((err, values) => {
         if (err) {
+          setNotice(err.message);
           return;
         }
 

@@ -9,4 +9,12 @@ export default new Resource('/users', {
     url: 'signup',
     method: 'post',
   },
+  changePassword: {
+    url: 'change-password',
+    method: 'post',
+  },
+  exist: {
+    url: 'exist',
+    method: 'get',
+  },
 });
