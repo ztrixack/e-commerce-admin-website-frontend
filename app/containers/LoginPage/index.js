@@ -104,8 +104,8 @@ export function LoginPage(props) {
           <span>Password：admin</span>
         </LoginAdmin>
         <LoginGuest>
-          <span>Username：guest</span>
-          <span>Password：guest</span>
+          <span>Username：staff</span>
+          <span>Password：staff</span>
         </LoginGuest>
       </Form>
     </LoginWarp>
