@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import { Card, message } from 'antd';
+import { Card } from 'antd';
 import UserTable from 'components/UserTable';
 
 import { useInjectSaga } from 'utils/injectSaga';
@@ -27,15 +27,8 @@ export function UserPage(props) {
   useInjectSaga({ key: 'userPage', saga });
 
   const { dataSource, loading, error, alert, events } = useHooks(props);
+  alert.call();
 
-  if (alert[0] !== '') {
-    if (alert[0] === 'info') {
-      message.info(alert[1]);
-    } else {
-      message.error(alert[1]);
-    }
-    events.resetAlert();
-  }
   return (
     <Card loading={loading} error={error}>
       <UserTable

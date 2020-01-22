@@ -1,51 +1,29 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { UserAPI } from 'api';
-import { useFetch, usePost } from 'hooks';
+import { useAlert, useFetch, usePost } from 'hooks';
+import history from 'utils/history';
 
 const config = {
   api: UserAPI.find,
 };
 
 function useHooks() {
-  const [alert, setAlert] = useState(['', '']);
+  const alert = useAlert();
   const [dataSource, loading, error] = useFetch(config);
   const [call, updating] = usePost();
 
   const handleAdd = useCallback(
-    () => async data => {
-      const [result, err] = await call({
-        api: UserAPI.create,
-        payload: data,
-      });
-
-      if (err) {
-        setAlert(['error', 'Add user is failed']);
-        return null;
-      }
-
-      setAlert(['info', 'Add user is completed']);
-      return result;
+    () => () => {
+      history.push('users/new');
     },
-    [call],
+    [],
   );
 
   const handleEdit = useCallback(
-    () => async (id, data) => {
-      const [result, err] = await call({
-        api: UserAPI.update,
-        params: { id },
-        payload: data,
-      });
-
-      if (err) {
-        setAlert(['error', 'Edit user is failed']);
-        return null;
-      }
-
-      setAlert(['info', 'Edit user is completed']);
-      return result;
+    () => id => {
+      history.push(`users/edit/${id}`);
     },
-    [call],
+    [],
   );
 
   const handleDelete = useCallback(
@@ -56,19 +34,15 @@ function useHooks() {
       });
 
       if (err) {
-        setAlert(['error', 'Delete user is failed']);
-      } else {
-        setAlert(['info', 'Delete user is completed']);
+        alert.error('Delete user is failed');
+        return false;
       }
 
-      return !err;
+      alert.info('Delete user is completed');
+      return true;
     },
-    [call],
+    [alert, call],
   );
-
-  const resetAlert = useCallback(() => {
-    setAlert(['', '']);
-  }, []);
 
   return {
     dataSource,
@@ -80,7 +54,6 @@ function useHooks() {
       handleAdd,
       handleEdit,
       handleDelete,
-      resetAlert,
     },
   };
 }

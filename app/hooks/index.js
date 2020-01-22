@@ -4,7 +4,9 @@
  *
  */
 
-import { useRef, useEffect, useReducer, useState } from 'react';
+import { useRef, useEffect, useReducer, useState, useCallback } from 'react';
+import { message } from 'antd';
+
 import { dataFetchReducer, initialState } from './reducer';
 import { fetch, fetchSuccess, fetchFailure } from './actions';
 
@@ -95,7 +97,7 @@ const useFetch = config => {
     return () => {
       didCancel = true;
     };
-  }, [config]);
+  }, []);
 
   return [state.data, state.loading, state.error];
 };
@@ -153,10 +155,44 @@ const useForceUpdate = () => {
   return forceUpdate;
 };
 
+const useAlert = () => {
+  const [text, setText] = useState('');
+  const [type, setType] = useState('');
+
+  const info = raw => {
+    setType('info');
+    setText(raw);
+  };
+
+  const error = raw => {
+    setType('error');
+    setText(raw);
+  };
+
+  const reset = () => {
+    setType('');
+    setText('');
+  };
+
+  const call = useCallback(() => {
+    if (text !== '') {
+      if (type === 'info') {
+        message.info(text);
+      } else {
+        message.error(text);
+      }
+      reset();
+    }
+  }, [text, type]);
+
+  return { call, info, error, reset };
+};
+
 export {
   useWindowDimensions,
   useDeviceDetect,
   useFetch,
   usePost,
   useForceUpdate,
+  useAlert,
 };

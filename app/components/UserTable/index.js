@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
-import EditableTable from 'components/EditableTable';
+import CustomTable from 'components/CustomTable';
 
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
@@ -21,7 +21,7 @@ const columns = [
     width: '5%',
   },
   {
-    title: 'Userame',
+    title: 'Username',
     dataIndex: 'username',
     key: 'username',
     width: '20%',
@@ -50,7 +50,7 @@ const columns = [
 ];
 
 function UserTable(props) {
-  return <EditableTable editable columns={columns} {...props} />;
+  return <CustomTable columns={columns} {...props} />;
 }
 
 UserTable.propTypes = {

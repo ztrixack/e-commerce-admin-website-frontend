@@ -79,11 +79,8 @@ class EditableTable extends React.Component {
     const setupDataTable = data =>
       data.map(d => Object.assign(d, { key: d.id }));
 
-    const setupColumns = (columns, editable) =>
-      editable ? columns.concat(this.operations) : columns;
-
     this.state = {
-      columns: setupColumns(props.columns, props.editable),
+      columns: props.columns.concat(this.operations),
       data: setupDataTable(props.dataSource || []),
       editingKey: '',
     };
@@ -234,14 +231,10 @@ class EditableTable extends React.Component {
 
 EditableTable.propTypes = {
   columns: PropTypes.array,
-  editable: PropTypes.bool,
   dataSource: PropTypes.array,
   onAdd: PropTypes.func,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  // data: PropTypes.array,
-  // editingKey: PropTypes.string,
-  // events: PropTypes.object,
 };
 
 export default EditableTable;

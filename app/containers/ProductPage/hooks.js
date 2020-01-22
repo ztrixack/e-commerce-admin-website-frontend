@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { ProductAPI } from 'api';
-import { useFetch, usePost } from 'hooks';
+import { useAlert, useFetch, usePost } from 'hooks';
 
 const config = {
   api: ProductAPI.find,
 };
 
 function useHooks() {
-  const [alert, setAlert] = useState(['', '']);
+  const alert = useAlert();
   const [dataSource, loading, error] = useFetch(config);
   const [call, updating] = usePost();
 
@@ -19,14 +19,14 @@ function useHooks() {
       });
 
       if (err) {
-        setAlert(['error', 'Add product is failed']);
+        alert.error('Add product is failed');
         return null;
       }
 
-      setAlert(['info', 'Add product is completed']);
+      alert.info('Add product is completed');
       return result;
     },
-    [call],
+    [alert, call],
   );
 
   const handleEdit = useCallback(
@@ -38,14 +38,14 @@ function useHooks() {
       });
 
       if (err) {
-        setAlert(['error', 'Edit product is failed']);
+        alert.error('Edit product is failed');
         return null;
       }
 
-      setAlert(['info', 'Edit product is completed']);
+      alert.info('Edit product is completed');
       return result;
     },
-    [call],
+    [alert, call],
   );
 
   const handleDelete = useCallback(
@@ -56,19 +56,15 @@ function useHooks() {
       });
 
       if (err) {
-        setAlert(['error', 'Delete product is failed']);
-      } else {
-        setAlert(['info', 'Delete product is completed']);
+        alert.error('Delete product is failed');
+        return false;
       }
 
-      return !err;
+      alert.info('Delete product is completed');
+      return true;
     },
-    [call],
+    [alert, call],
   );
-
-  const resetAlert = useCallback(() => {
-    setAlert(['', '']);
-  }, []);
 
   return {
     dataSource,
@@ -80,7 +76,6 @@ function useHooks() {
       handleAdd,
       handleEdit,
       handleDelete,
-      resetAlert,
     },
   };
 }

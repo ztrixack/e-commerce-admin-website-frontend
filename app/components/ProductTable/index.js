@@ -51,7 +51,7 @@ const columns = [
 ];
 
 function ProductTable(props) {
-  return <EditableTable editable columns={columns} {...props} />;
+  return <EditableTable columns={columns} {...props} />;
 }
 
 ProductTable.propTypes = {
