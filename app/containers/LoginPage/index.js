@@ -32,6 +32,7 @@ import {
   LoginLogoSpan,
   LoginFormInput,
   LoginFormButton,
+  LoginAdmin,
   LoginGuest,
 } from './styles';
 
@@ -98,6 +99,10 @@ export function LoginPage(props) {
         <LoginFormButton type="primary" htmlType="submit">
           Sign in
         </LoginFormButton>
+        <LoginAdmin>
+          <span>Username：admin</span>
+          <span>Password：admin</span>
+        </LoginAdmin>
         <LoginGuest>
           <span>Username：guest</span>
           <span>Password：guest</span>

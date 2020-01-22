@@ -12,7 +12,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 import { Card, message } from 'antd';
-import EditableTable from 'components/EditableTable';
+import ProductTable from 'components/ProductTable';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -39,7 +39,7 @@ export function ProductPage(props) {
 
   return (
     <Card loading={loading} error={error}>
-      <EditableTable
+      <ProductTable
         dataSource={dataSource}
         onAdd={events.handleAdd()}
         onEdit={events.handleEdit()}

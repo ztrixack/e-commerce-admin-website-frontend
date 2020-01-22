@@ -36,89 +36,57 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
 
+    this.operations = {
+      title: 'operation',
+      dataIndex: 'operation',
+      width: '15%',
+      render: (text, record) => {
+        const editable = this.isEditing(record);
+        return editable ? (
+          <span>
+            <EditableContext.Consumer>
+              {form => (
+                <ClickableText onClick={() => this.save(form, record.key)}>
+                  Save
+                </ClickableText>
+              )}
+            </EditableContext.Consumer>
+            <ClickableText onClick={() => this.cancel(record.key)}>
+              Cancel
+            </ClickableText>
+          </span>
+        ) : (
+          <span>
+            <ClickableText
+              disabled={this.state.editingKey !== ''}
+              onClick={() => this.edit(record.key)}
+            >
+              Edit
+            </ClickableText>
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => this.remove(record.key)}
+            >
+              <ClickableText disabled={this.state.editingKey !== ''}>
+                Delete
+              </ClickableText>
+            </Popconfirm>
+          </span>
+        );
+      },
+    };
+
     const setupDataTable = data =>
       data.map(d => Object.assign(d, { key: d.id }));
 
+    const setupColumns = (columns, editable) =>
+      editable ? columns.concat(this.operations) : columns;
+
     this.state = {
+      columns: setupColumns(props.columns, props.editable),
       data: setupDataTable(props.dataSource || []),
       editingKey: '',
     };
-
-    this.columns = [
-      {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        width: '5%',
-      },
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        width: '25%',
-        editable: true,
-      },
-      {
-        title: 'Image',
-        dataIndex: 'image',
-        key: 'image',
-        editable: true,
-      },
-      {
-        title: 'Price',
-        dataIndex: 'price',
-        key: 'price',
-        width: '10%',
-        editable: true,
-      },
-      {
-        title: 'Hidden',
-        dataIndex: 'hidden',
-        key: 'hidden',
-        editable: true,
-        width: '15%',
-        render: hidden => hidden.toString(),
-      },
-      {
-        title: 'operation',
-        dataIndex: 'operation',
-        width: '15%',
-        render: (text, record) => {
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <ClickableText onClick={() => this.save(form, record.key)}>
-                    Save
-                  </ClickableText>
-                )}
-              </EditableContext.Consumer>
-              <ClickableText onClick={() => this.cancel(record.key)}>
-                Cancel
-              </ClickableText>
-            </span>
-          ) : (
-            <span>
-              <ClickableText
-                disabled={this.state.editingKey !== ''}
-                onClick={() => this.edit(record.key)}
-              >
-                Edit
-              </ClickableText>
-              <Popconfirm
-                title="Sure to delete?"
-                onConfirm={() => this.remove(record.key)}
-              >
-                <ClickableText disabled={this.state.editingKey !== ''}>
-                  Delete
-                </ClickableText>
-              </Popconfirm>
-            </span>
-          );
-        },
-      },
-    ];
   }
 
   isEditing = record => record.key === this.state.editingKey;
@@ -223,7 +191,7 @@ class EditableTable extends React.Component {
       },
     };
 
-    const columns = this.columns.map(col => {
+    const columns = this.state.columns.map(col => {
       if (!col.editable) {
         return col;
       }
@@ -265,6 +233,8 @@ class EditableTable extends React.Component {
 }
 
 EditableTable.propTypes = {
+  columns: PropTypes.array,
+  editable: PropTypes.bool,
   dataSource: PropTypes.array,
   onAdd: PropTypes.func,
   onEdit: PropTypes.func,

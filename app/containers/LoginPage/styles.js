@@ -43,10 +43,20 @@ const LoginFormButton = styled(Button)`
   width: 100%;
 `;
 
-const LoginGuest = styled.p`
+const LoginAdmin = styled.p`
   color: #cccccc;
   text-align: center;
   margin-top: 16px;
+  margin-bottom: 0px;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const LoginGuest = styled.p`
+  color: #cccccc;
+  text-align: center;
+  margin-bottom: 16px;
   font-size: 12px;
   display: flex;
   justify-content: space-between;
@@ -59,5 +69,6 @@ export {
   LoginLogoSpan,
   LoginFormInput,
   LoginFormButton,
+  LoginAdmin,
   LoginGuest,
 };

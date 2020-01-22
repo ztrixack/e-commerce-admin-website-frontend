@@ -32,6 +32,19 @@ export function PrivateRoute(props) {
     return <Redirect to={{ pathname: '/forbidden' }} />;
   }
 
+  if (props.requiredRole) {
+    if (!(props.user && props.user.data)) {
+      return <Redirect to={{ pathname: '/forbidden' }} />;
+    }
+
+    const userRoles = props.user.data.roles;
+    const isInRole = props.requiredRole.some(role => userRoles.includes(role));
+
+    if (!isInRole) {
+      return <Redirect to={{ pathname: '/forbidden' }} />;
+    }
+  }
+
   return <Route component={Component} {...rest} />;
 }
 
@@ -39,6 +52,7 @@ PrivateRoute.propTypes = {
   dispatch: PropTypes.func.isRequired,
   component: PropTypes.any.isRequired,
   location: PropTypes.object.isRequired,
+  requiredRole: PropTypes.arrayOf(PropTypes.string),
   user: PropTypes.object,
 };
 
