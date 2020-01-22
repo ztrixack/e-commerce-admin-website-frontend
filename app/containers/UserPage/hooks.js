@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { ProductAPI } from 'api';
+import { UserAPI } from 'api';
 import { useFetch, usePost } from 'hooks';
 
 const config = {
-  api: ProductAPI.find,
+  api: UserAPI.find,
 };
 
 function useHooks() {
@@ -14,16 +14,16 @@ function useHooks() {
   const handleAdd = useCallback(
     () => async data => {
       const [result, err] = await call({
-        api: ProductAPI.create,
+        api: UserAPI.create,
         payload: data,
       });
 
       if (err) {
-        setAlert(['error', 'Add product is failed']);
+        setAlert(['error', 'Add user is failed']);
         return null;
       }
 
-      setAlert(['info', 'Add product is completed']);
+      setAlert(['info', 'Add user is completed']);
       return result;
     },
     [call],
@@ -32,17 +32,17 @@ function useHooks() {
   const handleEdit = useCallback(
     () => async (id, data) => {
       const [result, err] = await call({
-        api: ProductAPI.update,
+        api: UserAPI.update,
         params: { id },
         payload: data,
       });
 
       if (err) {
-        setAlert(['error', 'Edit product is failed']);
+        setAlert(['error', 'Edit user is failed']);
         return null;
       }
 
-      setAlert(['info', 'Edit product is completed']);
+      setAlert(['info', 'Edit user is completed']);
       return result;
     },
     [call],
@@ -51,14 +51,14 @@ function useHooks() {
   const handleDelete = useCallback(
     () => async id => {
       const [, err] = await call({
-        api: ProductAPI.delete,
+        api: UserAPI.delete,
         params: { id },
       });
 
       if (err) {
-        setAlert(['error', 'Delete product is failed']);
+        setAlert(['error', 'Delete user is failed']);
       } else {
-        setAlert(['info', 'Delete product is completed']);
+        setAlert(['info', 'Delete user is completed']);
       }
 
       return !err;

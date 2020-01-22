@@ -1,5 +1,6 @@
 import DashboardPage from 'containers/DashboardPage/Loadable';
 import ProductPage from 'containers/ProductPage/Loadable';
+import UserPage from 'containers/UserPage/Loadable';
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
     menu: 'Product',
     component: ProductPage,
     icon: 'database',
+  },
+  {
+    path: 'user',
+    menu: 'User',
+    component: UserPage,
+    icon: 'user',
   },
 ];
 
