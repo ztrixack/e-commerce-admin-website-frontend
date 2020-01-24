@@ -12,14 +12,19 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-// import messages from './messages';
-
+import Loading from 'components/Loading';
 import makeSelectUserProvider from 'containers/UserProvider/selectors';
+
+// import messages from './messages';
 
 import { Redirect } from 'react-router-dom';
 
 export function HomePage({ user }) {
-  if (user && user.isAuthenticated) {
+  if (user.loading) {
+    return <Loading />;
+  }
+
+  if (user.isAuthenticated) {
     if (user.data.roles && user.data.roles.length > 0) {
       const highestRole = user.data.roles[0];
       return <Redirect to={{ pathname: `/${highestRole}/dashboard` }} />;

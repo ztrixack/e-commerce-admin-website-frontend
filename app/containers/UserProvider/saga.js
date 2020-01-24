@@ -21,7 +21,7 @@ function loginApi(credential) {
       localStorage.setItem(AUTHENTICATION, JSON.stringify(response));
       resolve(response);
     } catch (e) {
-      reject(e.response);
+      reject(e.response.statusText);
     }
   });
 }

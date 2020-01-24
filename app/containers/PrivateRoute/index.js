@@ -13,6 +13,7 @@ import { compose } from 'redux';
 
 import { Route, Redirect } from 'react-router-dom';
 
+import Loading from 'components/Loading';
 import makeSelectUserProvider from 'containers/UserProvider/selectors';
 
 import { useInjectSaga } from 'utils/injectSaga';
@@ -26,19 +27,23 @@ export function PrivateRoute(props) {
   useInjectReducer({ key: 'privateRoute', reducer });
   useInjectSaga({ key: 'privateRoute', saga });
 
-  const { component: Component, ...rest } = props;
+  const { component: Component, user, requiredRole, ...rest } = props;
 
-  if (!(props.user && props.user.isAuthenticated)) {
+  if (user.loading) {
+    return <Loading />;
+  }
+
+  if (!user.isAuthenticated) {
     return <Redirect to={{ pathname: '/forbidden' }} />;
   }
 
-  if (props.requiredRole) {
-    if (!(props.user && props.user.data)) {
+  if (requiredRole) {
+    if (!user.data) {
       return <Redirect to={{ pathname: '/forbidden' }} />;
     }
 
-    const userRoles = props.user.data.roles;
-    const isInRole = props.requiredRole.some(role => userRoles.includes(role));
+    const userRoles = user.data.roles;
+    const isInRole = requiredRole.some(role => userRoles.includes(role));
 
     if (!isInRole) {
       return <Redirect to={{ pathname: '/forbidden' }} />;

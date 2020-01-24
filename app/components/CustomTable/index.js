@@ -5,13 +5,14 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 
 import { Alert, Button, Table, Popconfirm } from 'antd';
 
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
+import { useHooks } from './hooks';
 import {
   HeaderIcon,
   HeaderText,
@@ -28,84 +29,56 @@ const getHeaderTable = size => (
   </React.Fragment>
 );
 
-// eslint-disable-next-line react/prefer-stateless-function
-class CustomTable extends React.Component {
-  constructor(props) {
-    super(props);
+const getOperationView = events => (text, record) => (
+  <span>
+    <ClickableText onClick={events.handleEdit(record.key)}>Edit</ClickableText>
+    <Popconfirm
+      title="Sure to delete?"
+      onConfirm={events.handleRemove(record.key)}
+    >
+      <ClickableText>Delete</ClickableText>
+    </Popconfirm>
+  </span>
+);
 
-    this.operations = {
-      title: 'operation',
-      dataIndex: 'operation',
-      width: '15%',
-      render: (text, record) => (
-        <span>
-          <ClickableText onClick={() => this.edit(record.key)}>
-            Edit
-          </ClickableText>
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={() => this.remove(record.key)}
-          >
-            <ClickableText>Delete</ClickableText>
-          </Popconfirm>
-        </span>
-      ),
-    };
+function CustomTable(props) {
+  const { columns, data, loading, events } = useHooks(props);
 
-    const setupDataTable = data =>
-      data.map(d => Object.assign(d, { key: d.id }));
+  const cols = columns.concat({
+    title: 'operation',
+    dataIndex: 'operation',
+    width: '15%',
+    render: getOperationView(events),
+  });
 
-    this.state = {
-      columns: props.columns.concat(this.operations),
-      data: setupDataTable(props.dataSource || []),
-    };
-  }
-
-  add = () => {
-    this.props.onAdd();
-  };
-
-  edit = key => {
-    this.props.onEdit(key);
-  };
-
-  remove = async key => {
-    const success = await this.props.onDelete(key);
-
-    if (success) {
-      this.setState(state => ({
-        data: state.data.filter(item => item.key !== key),
-      }));
-    }
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <Button
-          onClick={() => this.add()}
-          type="primary"
-          style={{ marginBottom: 16 }}
-        >
-          Add new user
-        </Button>
-        <Alert message={getHeaderTable(this.state.data.length)} type="info" />
-        <Table
-          bordered
-          dataSource={this.state.data}
-          columns={this.state.columns}
-        />
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Button
+        onClick={events.handleAdd()}
+        type="primary"
+        style={{ marginBottom: 16 }}
+      >
+        Add new user
+      </Button>
+      <Alert message={getHeaderTable(data.length)} type="info" />
+      <Table
+        bordered
+        dataSource={data}
+        columns={cols}
+        size="middle"
+        scroll={{ x: 'calc(700px + 50%)' }}
+        loading={loading}
+      />
+    </React.Fragment>
+  );
 }
 
 CustomTable.propTypes = {
-  columns: PropTypes.array,
-  dataSource: PropTypes.array,
-  onAdd: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
+  // columns: PropTypes.array,
+  // dataSource: PropTypes.array,
+  // onAdd: PropTypes.func,
+  // onEdit: PropTypes.func,
+  // onDelete: PropTypes.func,
 };
 
 export default CustomTable;

@@ -16,6 +16,7 @@ import { ConnectedRouter } from 'connected-react-router/immutable';
 import HomePage from 'containers/HomePage/Loadable';
 import LoginPage from 'containers/LoginPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import ForbiddenPage from 'containers/ForbiddenPage/Loadable';
 
 import PrivateRoute from 'containers/PrivateRoute/Loadable';
 
@@ -42,6 +43,7 @@ export function App(props) {
           component={StaffLayout}
           requiredRole={['staff']}
         />
+        <Route exact path="/forbidden" component={ForbiddenPage} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

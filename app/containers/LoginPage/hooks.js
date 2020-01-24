@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { login } from 'containers/UserProvider/actions';
 
 function useHooks({ form, user, dispatch }) {
@@ -6,7 +6,13 @@ function useHooks({ form, user, dispatch }) {
 
   const [notice, setNotice] = useState(null);
 
-  const onLogin = React.useCallback(
+  useEffect(() => {
+    if (user.error) {
+      setNotice('Invalid username or password');
+    }
+  }, [user.error]);
+
+  const onLogin = useCallback(
     () => e => {
       e.preventDefault();
       setNotice(null);
@@ -26,6 +32,7 @@ function useHooks({ form, user, dispatch }) {
   return {
     notice,
     isAuthenticated: user && user.isAuthenticated,
+    loading: user.loading,
     events: {
       onLogin,
     },

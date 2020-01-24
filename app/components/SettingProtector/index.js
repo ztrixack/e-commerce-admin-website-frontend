@@ -18,8 +18,7 @@ import { TextWrapper, ExtraButton } from './styles';
 const { Panel } = Collapse;
 
 function SettingProtector(props) {
-  const { loading } = props;
-  const { active, key, alert, events } = useHooks(props);
+  const { active, key, alert, loading, events } = useHooks(props);
   alert.call();
 
   return (
@@ -64,7 +63,7 @@ SettingProtector.propTypes = {
   title: PropTypes.string,
   details: PropTypes.string,
   button: PropTypes.string,
-  loading: PropTypes.bool,
+  // loading: PropTypes.bool,
   children: PropTypes.node,
   // onSubmit: PropTypes.func,
 };
