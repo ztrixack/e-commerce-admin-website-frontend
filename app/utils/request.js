@@ -1,44 +1,116 @@
-/**
- * Parses the JSON returned by a network request
- *
- * @param  {object} response A response from a network request
- *
- * @return {object}          The parsed JSON from the request
- */
-function parseJSON(response) {
-  if (response.status === 204 || response.status === 205) {
-    return null;
+import axios from 'axios';
+import { AUTHENTICATION } from 'config/constants';
+import _config from 'config';
+const baseURL = _config.apiUrl;
+
+axios.defaults.baseURL = baseURL;
+function buildURLFromTemplate(data, options) {
+  let outputData;
+  let outputURL;
+  if (data instanceof FormData) {
+    outputData = data;
+    outputURL = options.url.replace(/\{(.+?)\}/g, (m, label) => {
+      const value = outputData.get(label);
+      if (value !== undefined) {
+        outputData.delete(label);
+      } else {
+        throw new Error(`Cannot find ${label} in ${options.url}`);
+      }
+      return value;
+    });
+  } else {
+    outputData = { ...options.defaultParams, ...data };
+    outputURL = options.url.replace(/\{(.+?)\}/g, (m, label) => {
+      const value = outputData[label];
+      if (value !== undefined) {
+        delete outputData[label];
+      } else {
+        throw new Error(`Cannot find ${label} in ${options.url}`);
+      }
+      return value;
+    });
   }
-  return response.json();
+
+  return {
+    data: outputData,
+    url: outputURL,
+  };
 }
 
-/**
- * Checks if a network request came back fine, and throws an error if not
- *
- * @param  {object} response   A response from a network request
- *
- * @return {object|undefined} Returns either the response, or throws an error
- */
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
+export async function refreshToken(token) {
+  const options = {
+    method: 'get',
+    url: '/oauth/token',
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    localStorage.setItem(AUTHENTICATION, JSON.stringify(response.data));
     return response;
+  } catch (e) {
+    throw e;
+  }
+}
+
+export default async (data, options, extraOptions) => {
+  const config = {};
+  const { data: outputData, url } = buildURLFromTemplate(data, options);
+  config.url = url;
+  switch (options.method) {
+    case 'post':
+      config.method = 'post';
+      config.data = outputData;
+      break;
+    case 'get':
+      config.method = 'get';
+      config.params = outputData;
+      break;
+    case 'put':
+      config.method = 'put';
+      config.data = outputData;
+      break;
+    case 'delete':
+      config.method = 'delete';
+      config.params = outputData;
+      break;
+    case 'patch':
+      config.method = 'patch';
+      config.data = outputData;
+      break;
+    default:
+      throw new Error('Http method not support');
   }
 
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
-}
+  try {
+    // set header
+    config.headers = {
+      ...options.headers,
+    };
+    if (localStorage.getItem(AUTHENTICATION)) {
+      try {
+        let token = JSON.parse(localStorage.getItem(AUTHENTICATION));
+        // check if require refresh token
+        if (Date.now() - token.created_at >= token.expires_in) {
+          await refreshToken(`${token.token_type} ${token.refresh_token}`);
+          token = JSON.parse(localStorage.getItem(AUTHENTICATION));
+        }
 
-/**
- * Requests a URL, returning a promise
- *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
- *
- * @return {object}           The response data
- */
-export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
-}
+        const authorization = `${token.token_type} ${token.access_token}`;
+        config.headers.Authorization = authorization;
+      } catch (e) {
+        delete config.headers.Authorization;
+      }
+    }
+
+    const result = await axios.request({ ...config, ...extraOptions });
+    return result.data;
+  } catch (e) {
+    if (e.response && e.response.data && e.response.data.error) {
+      e.response = e.response.data.error;
+    }
+    throw e;
+  }
+};

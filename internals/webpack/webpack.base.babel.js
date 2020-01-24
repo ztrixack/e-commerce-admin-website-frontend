@@ -4,6 +4,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const dotenv = require('dotenv').config();
 
 module.exports = options => ({
   mode: options.mode,
@@ -34,6 +35,33 @@ module.exports = options => ({
         test: /\.css$/,
         exclude: /node_modules/,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            },
+          },
+          'sass-loader',
+        ],
       },
       {
         // Preprocess 3rd party .css files located in node_modules
@@ -111,8 +139,21 @@ module.exports = options => ({
     // Always expose NODE_ENV to webpack, in order to use `process.env.NODE_ENV`
     // inside your code for any environment checks; Terser will automatically
     // drop any unreachable code.
-    new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
+    // new webpack.EnvironmentPlugin({
+    //   NODE_ENV: 'development',
+    // }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV:
+          dotenv.parsed && JSON.stringify(dotenv.parsed.NODE_ENV) ||
+          JSON.stringify(process.env.NODE_ENV),
+        PORT:
+          dotenv.parsed && JSON.stringify(dotenv.parsed.PORT) ||
+          JSON.stringify(process.env.PORT),
+        BASE_URL:
+          dotenv.parsed && JSON.stringify(dotenv.parsed.BASE_URL) ||
+          JSON.stringify(process.env.BASE_URL),
+      },
     }),
   ]),
   resolve: {
