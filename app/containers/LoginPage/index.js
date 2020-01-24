@@ -41,7 +41,7 @@ export function LoginPage(props) {
   useInjectSaga({ key: 'loginPage', saga });
 
   const { getFieldDecorator } = props.form;
-  const { notice, isAuthenticated, events } = useHooks(props);
+  const { notice, isAuthenticated, loading, events } = useHooks(props);
 
   if (isAuthenticated) {
     return <Redirect to={{ pathname: '/' }} />;
@@ -96,7 +96,7 @@ export function LoginPage(props) {
             closable
           />
         )}
-        <LoginFormButton type="primary" htmlType="submit">
+        <LoginFormButton type="primary" htmlType="submit" loading={loading}>
           Sign in
         </LoginFormButton>
         <LoginAdmin>

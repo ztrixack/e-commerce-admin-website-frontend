@@ -11,8 +11,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
-import Loading from 'components/Loading';
-
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 
@@ -34,11 +32,7 @@ export function UserProvider(props) {
     }
   }, [dispatch, user.isAuthenticated]);
 
-  return (
-    <Loading loading={props.user.loading}>
-      {React.Children.only(props.children)}
-    </Loading>
-  );
+  return <React.Fragment>{React.Children.only(props.children)}</React.Fragment>;
 }
 
 UserProvider.propTypes = {
