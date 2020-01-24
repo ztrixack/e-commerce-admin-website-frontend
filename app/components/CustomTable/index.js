@@ -94,6 +94,8 @@ class CustomTable extends React.Component {
           bordered
           dataSource={this.state.data}
           columns={this.state.columns}
+          size="middle"
+          scroll={{ x: 'calc(700px + 50%)' }}
         />
       </React.Fragment>
     );

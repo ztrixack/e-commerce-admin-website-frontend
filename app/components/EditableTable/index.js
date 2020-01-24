@@ -223,6 +223,8 @@ class EditableTable extends React.Component {
           pagination={{
             onChange: () => this.cancel,
           }}
+          size="middle"
+          scroll={{ x: 'calc(700px + 50%)' }}
         />
       </React.Fragment>
     );
