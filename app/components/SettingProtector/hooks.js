@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useAlert } from 'hooks';
 
-function useHooks({ form, title, onSave }) {
+function useHooks({ form, title, loading, onSave }) {
   const alert = useAlert();
   const [active, setActive] = useState(false);
   const key = useMemo(() => title.toLowerCase().replace(' ', '-'), [title]);
@@ -19,7 +19,6 @@ function useHooks({ form, title, onSave }) {
       e.preventDefault();
 
       form.validateFields((error, values) => {
-        console.log(values);
         if (error) {
           alert.error('user is invalid');
           return;
@@ -37,6 +36,7 @@ function useHooks({ form, title, onSave }) {
     key,
     active,
     alert,
+    loading,
     events: {
       handleChange,
       handleSubmit,

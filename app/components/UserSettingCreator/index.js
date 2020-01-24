@@ -18,7 +18,7 @@ const { Password } = Input;
 
 function UserSettingCreator(props) {
   const { form } = props;
-  const { alert, events } = useHooks(props);
+  const { alert, submitting, events } = useHooks(props);
   alert.call();
 
   return (
@@ -65,7 +65,7 @@ function UserSettingCreator(props) {
         })(<Password type="password" onBlur={events.handleConfirmBlur()} />)}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={submitting}>
           Next
         </Button>
       </Form.Item>

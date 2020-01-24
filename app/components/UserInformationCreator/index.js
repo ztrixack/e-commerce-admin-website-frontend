@@ -19,7 +19,7 @@ const roles = ['staff', 'admin'];
 function UserInformationCreator(props) {
   const { getFieldDecorator } = props.form;
 
-  const { alert, events } = useHooks(props);
+  const { alert, loading, events } = useHooks(props);
   alert.call();
 
   return (
@@ -92,7 +92,7 @@ function UserInformationCreator(props) {
             Back
           </Button>
           <Divider type="vertical" style={{ visibility: 'hidden' }} />
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={loading}>
             Create
           </Button>
         </Form.Item>

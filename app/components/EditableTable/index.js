@@ -83,6 +83,7 @@ class EditableTable extends React.Component {
       columns: props.columns.concat(this.operations),
       data: setupDataTable(props.dataSource || []),
       editingKey: '',
+      loading: false,
     };
   }
 
@@ -91,14 +92,17 @@ class EditableTable extends React.Component {
   isNewRecord = key => key === 'new';
 
   cancel = key => {
+    this.setState({ loading: true });
     if (this.isNewRecord(key)) this.remove(key);
 
-    this.setState({ editingKey: '' });
+    this.setState({ loading: false, editingKey: '' });
   };
 
   save = (form, key) => {
+    this.setState({ loading: true });
     form.validateFields(async (error, row) => {
       if (error) {
+        this.setState({ loading: false });
         return;
       }
 
@@ -121,14 +125,9 @@ class EditableTable extends React.Component {
           ...item,
           ...result,
         });
-        this.setState({
-          data: newData,
-          editingKey: '',
-        });
+        this.setState({ loading: false, data: newData, editingKey: '' });
       } else {
-        this.setState({
-          editingKey: '',
-        });
+        this.setState({ loading: false, editingKey: '' });
       }
     });
   };
@@ -154,6 +153,7 @@ class EditableTable extends React.Component {
   };
 
   remove = async key => {
+    this.setState({ loading: true });
     let success = true;
 
     if (!this.isNewRecord(key)) {
@@ -162,6 +162,7 @@ class EditableTable extends React.Component {
 
     if (success) {
       this.setState(state => ({
+        loading: false,
         data: state.data.filter(item => item.key !== key),
       }));
     }
@@ -225,6 +226,7 @@ class EditableTable extends React.Component {
           }}
           size="middle"
           scroll={{ x: 'calc(700px + 50%)' }}
+          loading={this.state.loading}
         />
       </React.Fragment>
     );
